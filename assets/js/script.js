@@ -2,8 +2,10 @@ let currentDay = moment().format('dddd, MMMM Do');
 let currentHour = moment().format('HH');
 let currentDayEl = $('#currentDay');
 let timeBlockEls = $('.time-block div');
+let saveBtn = $('.saveBtn');
 
 currentDayEl.text(currentDay);
+//localStorage.getItem('activity')
 
 timeBlockEls.each(function (index) {
     let timeBlockTimeEl = moment($(this).text(), ['hA']).format('HH');
@@ -11,7 +13,6 @@ timeBlockEls.each(function (index) {
 
     if (timeBlockTimeEl < currentHour) {
         textAreaEl.addClass('past');
-        textAreaEl.prop('readonly', true);
     } else if (timeBlockTimeEl === currentHour) {
         textAreaEl.addClass('present');
     } else {
@@ -19,3 +20,17 @@ timeBlockEls.each(function (index) {
     }
 })
 
+
+saveBtn.on('click', function () {
+    let index = $('.container').index($(this).parent());
+    let activityText = $(this).parent().find('textarea').val();
+
+    console.log(index);
+
+    let timeBlockActivity = {
+        index: index,
+        activity: activityText
+    }
+
+    localStorage.setItem('activity', JSON.stringify(timeBlockActivity));
+})
