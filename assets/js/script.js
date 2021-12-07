@@ -23,7 +23,7 @@ function init() {
             textAreaEl.addClass('future');
         }
     });
-}
+};
 
 function saveActivity() {
     activityHour = $(this).parent().find('.hour').text();
@@ -40,6 +40,6 @@ function getActivities() {
 };
 
 
-saveBtn.on('click', saveActivity)
+saveBtn.on('click', saveActivity);
 
 init();
