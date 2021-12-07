@@ -4,33 +4,42 @@ let currentDayEl = $('#currentDay');
 let timeBlockEls = $('.time-block div');
 let saveBtn = $('.saveBtn');
 
-currentDayEl.text(currentDay);
-//localStorage.getItem('activity')
+let activityHour, activityText;
 
-timeBlockEls.each(function (index) {
-    let timeBlockTimeEl = moment($(this).text(), ['hA']).format('HH');
-    let textAreaEl = $(this).parent().find('textarea');
+function init() {
+    currentDayEl.text(currentDay);
 
-    if (timeBlockTimeEl < currentHour) {
-        textAreaEl.addClass('past');
-    } else if (timeBlockTimeEl === currentHour) {
-        textAreaEl.addClass('present');
-    } else {
-        textAreaEl.addClass('future');
-    }
-})
+    getActivities();
+
+    timeBlockEls.each(function () {
+        let timeBlockTimeEl = moment($(this).text(), ['hA']).format('HH');
+        let textAreaEl = $(this).parent().find('textarea');
+
+        if (timeBlockTimeEl < currentHour) {
+            textAreaEl.addClass('past');
+        } else if (timeBlockTimeEl === currentHour) {
+            textAreaEl.addClass('present');
+        } else {
+            textAreaEl.addClass('future');
+        }
+    });
+}
+
+function saveActivity() {
+    activityHour = $(this).parent().find('.hour').text();
+    activityText = $(this).parent().find('.description').val();
+
+    localStorage.setItem(`activity-${activityHour}`, activityText);
+};
+
+function getActivities() {
+    timeBlockEls.each(function (index) {
+        activityHour = $(this).text();
+        $(this).parent().find('.description').text(localStorage.getItem(`activity-${activityHour}`))
+    });
+};
 
 
-saveBtn.on('click', function () {
-    let index = $('.container').index($(this).parent());
-    let activityText = $(this).parent().find('textarea').val();
+saveBtn.on('click', saveActivity)
 
-    console.log(index);
-
-    let timeBlockActivity = {
-        index: index,
-        activity: activityText
-    }
-
-    localStorage.setItem('activity', JSON.stringify(timeBlockActivity));
-})
+init();
